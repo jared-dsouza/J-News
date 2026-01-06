@@ -1,4 +1,4 @@
-const BASE_URL = "";
+const BASE_URL = "https://j-news.onrender.com";
 
 export const fetchArticles = (topic) => {
   const url = topic
