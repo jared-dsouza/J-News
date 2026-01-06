@@ -17,16 +17,16 @@ Northcoders News allows users to:
 
 - **Frontend:** React, Vite
 - **Backend API:** Node.js, Express, PostgreSQL
-- **Styling:** CSS (or your chosen styling solution)
+- **Styling:** CSS
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v14+)
-- npm or yarn
+- npm
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+4. Open [http://localhost:5173]
 
 ## Backend API
 
