@@ -8,13 +8,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <header className="app-header">
-          {" "}
           <h1>NC News</h1>
         </header>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/articles/:article_id" element={<ArticlePage />} />
-        </Routes>{" "}
+        </Routes>
       </div>
     </BrowserRouter>
   );

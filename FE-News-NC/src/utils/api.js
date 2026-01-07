@@ -34,3 +34,18 @@ export const fetchArticleById = (articleId) => {
       throw error;
     });
 };
+
+export const fetchCommentsByArticleId = (articleId) => {
+  const url = `${BASE_URL}/api/articles/${articleId}/comments`;
+  return fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      return data.comments;
+    })
+    .catch((error) => {
+      console.error("Error fetching comments:", error);
+      throw error;
+    });
+};

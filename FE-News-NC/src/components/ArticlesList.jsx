@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
 import { fetchArticles } from "../utils/api";
-import ArticleCard from "./ArticleCard.jsx";
+import ArticleCard from "./ArticleCard"; // Import ArticleCard
 import Loading from "./Loading";
 
 function ArticlesList() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
     setError(null);
 
-    fetchArticles().then((articlesData) => {
-      console.log("✅ Articles loaded:", articlesData.length);
-      setArticles(articlesData);
-      setIsLoading(false);
-    });
+    fetchArticles()
+      .then((articlesData) => {
+        setArticles(articlesData);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError("Failed to load articles. Please try again later.");
+        setIsLoading(false);
+        console.error(err);
+      });
   }, []);
 
   if (isLoading) {

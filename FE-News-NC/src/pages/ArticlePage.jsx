@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchArticleById } from "../utils/api";
+import { fetchArticleById, fetchCommentsByArticleId } from "../utils/api";
 import Loading from "../components/Loading";
+import CommentsList from "../components/CommentsList";
 
 function ArticlePage() {
   const { article_id } = useParams();
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [comments, setComments] = useState([]);
 
   const formatDate = (dateString) => {
     const options = {
@@ -22,10 +24,16 @@ function ArticlePage() {
   useEffect(() => {
     setIsLoading(true);
 
-    fetchArticleById(article_id).then((articleData) => {
-      setArticle(articleData);
-      setIsLoading(false);
-    });
+    fetchArticleById(article_id)
+      .then((articleData) => {
+        setArticle(articleData);
+
+        return fetchCommentsByArticleId(article_id);
+      })
+      .then((commentsData) => {
+        setComments(commentsData);
+        setIsLoading(false);
+      });
   }, [article_id]);
 
   if (isLoading) {
@@ -55,7 +63,7 @@ function ArticlePage() {
           <div className="article-detail-stats">
             <span className="stat-item votes">⬆ {article.votes} votes</span>
             <span className="stat-item comments">
-              💬 {article.comment_count || 0} comments
+              💬 {comments.length} comments
             </span>
           </div>
         </div>
@@ -64,6 +72,8 @@ function ArticlePage() {
           <p>{article.body}</p>
         </div>
       </article>
+
+      <CommentsList comments={comments} />
     </main>
   );
 }
