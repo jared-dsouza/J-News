@@ -19,3 +19,18 @@ export const fetchArticles = (topic) => {
       throw error;
     });
 };
+
+export const fetchArticleById = (articleId) => {
+  const url = `${BASE_URL}/api/articles/${articleId}`;
+  return fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      return data.article;
+    })
+    .catch((error) => {
+      console.error("Error fetching article:", error);
+      throw error;
+    });
+};
