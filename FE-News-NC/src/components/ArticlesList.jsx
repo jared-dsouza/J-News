@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchArticles } from "../utils/api";
-import ArticleCard from "./ArticleCard"; // Import ArticleCard
+import ArticleCard from "./ArticleCard";
 import Loading from "./Loading";
 
 function ArticlesList() {
