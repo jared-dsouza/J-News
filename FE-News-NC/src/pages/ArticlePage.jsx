@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchArticleById, fetchCommentsByArticleId } from "../utils/api";
+import {
+  fetchArticleById,
+  fetchCommentsByArticleId,
+  voteOnArticle,
+} from "../utils/api";
 import Loading from "../components/Loading";
 import CommentsList from "../components/CommentsList";
+import VoteButtons from "../components/VoteButtons";
 
 function ArticlePage() {
   const { article_id } = useParams();
