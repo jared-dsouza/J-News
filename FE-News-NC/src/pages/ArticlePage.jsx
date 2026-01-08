@@ -41,6 +41,28 @@ function ArticlePage() {
       });
   }, [article_id]);
 
+  const handleVote = (voteChange) => {
+    setArticle((currentArticle) => ({
+      ...currentArticle,
+      votes: currentArticle.votes - voteChange,
+    }));
+    return voteOnArticle(article_id, voteChange).then((updatedArticle) => {
+      console.log("Vote successful", updatedArticle.votes);
+      setArticle((currentArticle) => ({
+        ...currentArticle,
+        votes: updatedArticle.votes,
+      })).catch((err) => {
+        console.error("Vote failed:", err);
+        setArticle((currentArticle) => ({
+          ...currentArticle,
+          votes: updatedArticle.votes - voteChange,
+        }));
+        throw err;
+      });
+      setIsLoading(false);
+    });
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -65,9 +87,13 @@ function ArticlePage() {
             </span>
           </div>
 
-          <div className="article-detail-stats">
-            <span className="stat-item votes">⬆ {article.votes} votes</span>
-            <span className="stat-item comments">
+          <div className="article-voting">
+            <VoteButtons
+              votes={article.votes}
+              onVote={handleVote}
+              itemType="article"
+            />
+            <span className="comments-count">
               💬 {comments.length} comments
             </span>
           </div>
