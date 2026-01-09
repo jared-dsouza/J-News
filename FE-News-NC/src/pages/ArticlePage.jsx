@@ -4,10 +4,12 @@ import {
   fetchArticleById,
   fetchCommentsByArticleId,
   voteOnArticle,
+  postComment,
 } from "../utils/api";
 import Loading from "../components/Loading";
 import CommentsList from "../components/CommentsList";
 import VoteButtons from "../components/VoteButtons";
+import CommentForm from "../components/CommentForm";
 
 function ArticlePage() {
   const { article_id } = useParams();
@@ -44,25 +46,56 @@ function ArticlePage() {
   const handleVote = (voteChange) => {
     setArticle((currentArticle) => ({
       ...currentArticle,
-      votes: currentArticle.votes - voteChange,
+      votes: currentArticle.votes + voteChange,
     }));
-    return voteOnArticle(article_id, voteChange).then((updatedArticle) => {
-      console.log("Vote successful", updatedArticle.votes);
-      setArticle((currentArticle) => ({
-        ...currentArticle,
-        votes: updatedArticle.votes,
-      })).catch((err) => {
+
+    return voteOnArticle(article_id, voteChange)
+      .then((updatedArticle) => {
+        console.log("Vote successful", updatedArticle.votes);
+        setArticle((currentArticle) => ({
+          ...currentArticle,
+          votes: updatedArticle.votes,
+        }));
+      })
+      .catch((err) => {
         console.error("Vote failed:", err);
         setArticle((currentArticle) => ({
           ...currentArticle,
-          votes: updatedArticle.votes - voteChange,
+          votes: currentArticle.votes - voteChange,
         }));
         throw err;
       });
-      setIsLoading(false);
-    });
   };
-
+  const handleCommentPosted = (commentBody) => {
+    console.log("📝 Posting comment:", commentBody);
+    const optimisticComment = {
+      comment_id: Date.now(),
+      author: loggedInUser,
+      body: commentBody,
+      votes: 0,
+      created_at: new Date().toISOString(),
+    };
+    setComments((currentComments) => [optimisticComment, ...currentComments]);
+    return postComment(article_id, loggedInUser, commentBody)
+      .then((newComment) => {
+        console.log("✅ Comment posted:", newComment);
+        setComments((currentComments) =>
+          currentComments.map((comment) =>
+            comment.comment_id === optimisticComment.comment_id
+              ? newComment
+              : comment
+          )
+        );
+      })
+      .catch((err) => {
+        console.error("Vote failed:", err);
+        setArticle((currentArticle) => ({
+          ...currentArticle,
+          votes: currentArticle.votes - voteChange,
+        }));
+        throw err;
+      });
+  };
   if (isLoading) {
     return <Loading />;
   }

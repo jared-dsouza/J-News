@@ -67,3 +67,22 @@ export const voteOnArticle = (articleId, voteChange) => {
       throw error;
     });
 };
+
+export const postComment = (articleId, author, body) => {
+  const url = `${BASE_URL}/api/articles/${articleId}/comments`;
+  return fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ author, body }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      return data.comment;
+    })
+    .catch((error) => {
+      console.error("Error posting comments:", error);
+      throw error;
+    });
+};

@@ -2,61 +2,46 @@ import { useState } from "react";
 
 function VoteButtons({ votes, onVote }) {
   const [voteError, setVoteError] = useState(null);
-  const [hasVoted, setHasVoted] = useState(0);
+  const [hasVoted, setHasVoted] = useState(null);
 
-  const handleVote = (voteChange) => {
-    if (
-      (voteChange === 1 && hasVoted === 1) ||
-      (voteChange === -1 && hasVoted === -1)
-    ) {
+  const handleVote = (voteType) => {
+    if (hasVoted !== null) {
       setVoteError("Already voted!");
       setTimeout(() => setVoteError(null), 3000);
+      return;
     }
-    return;
+    setVoteError(null);
+    const voteChange = voteType === "up" ? 1 : -1;
+    setHasVoted(voteType);
+
+    onVote(voteChange).catch((err) => {
+      setHasVoted(null);
+      setVoteError("Failed to vote. Please try again");
+      setTimeout(() => setVoteError(null), 4000);
+    });
   };
-  setVoteError(null);
-
-  const previousVote = hasVoted;
-  const newVoteState = previousVote === voteChange ? 0 : voteChange;
-  const actualChange = newVoteState - previousVote;
-
-  setHasVoted(newVoteState);
-
-  onVote(actualChange).catch((err) => {
-    setHasVoted(previousVote);
-    setVoteError("Failed to vote. Please try again");
-    setTimeout(() => setVoteError(null), 4000);
-  });
 
   return (
     <div className="vote-buttons">
       {/* Up Arrow functionality */}
       <button
-        onClick={() => handleVote(1)}
-        className={`vote-btn vote-
-up ${hasVoted === 1 ? "voted" : ""}`}
-        disabled={voteError !== null}
+        onClick={() => handleVote("up")}
+        className={`vote-btn vote-up ${hasVoted === "up" ? "voted" : ""}`}
+        disabled={hasVoted !== null}
       >
         ⬆
       </button>
-      <span className="separator">{votes + hasVoted}</span>
-
+      <span className="vote-count">{votes}</span>
       {/* Down Arrow functionality */}
       <button
-        onClick={() => handleVote(-1)}
-        className={`vote-btn vote-
-up ${hasVoted === -1 ? "voted" : ""}`}
-        disabled={voteError !== null}
+        onClick={() => handleVote("down")}
+        className={`vote-btn vote-down ${hasVoted === "down" ? "voted" : ""}`}
+        disabled={hasVoted !== null}
       >
         ⬇
       </button>
       {voteError && (
-        <div
-          className="vote-
-error"
-          role="alert"
-        >
-          {" "}
+        <div className="vote-error" role="alert">
           {voteError}
         </div>
       )}

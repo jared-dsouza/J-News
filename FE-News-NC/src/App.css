@@ -560,7 +560,7 @@ body {
   width: 40px;
   height: 40px;
   border: 2px solid #cbd5e1;
-  background: white;
+  background: rgb(24, 20, 20);
   border-radius: 8px;
   font-size: 1.25rem;
   cursor: pointer;
