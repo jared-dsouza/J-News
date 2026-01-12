@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-function Commentform({ articleId, onCommentPosted }) {
+function CommentForm({ articleId, onCommentPosted }) {
   const [commentBody, setCommentBody] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = (event) => {
-    event.preventdefault();
+    event.preventDefault();
     const trimmedComment = commentBody.trim();
 
     if (!trimmedComment) {

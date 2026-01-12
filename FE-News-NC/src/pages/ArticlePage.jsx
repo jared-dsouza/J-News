@@ -17,6 +17,8 @@ function ArticlePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [comments, setComments] = useState([]);
 
+  const loggedInUser = "grumpy19"; // Placeholder for authentication
+
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
@@ -88,11 +90,13 @@ function ArticlePage() {
         );
       })
       .catch((err) => {
-        console.error("Vote failed:", err);
-        setArticle((currentArticle) => ({
-          ...currentArticle,
-          votes: currentArticle.votes - voteChange,
-        }));
+        console.error("Posting failed:", err);
+        setComments((currentComments) =>
+          currentComments.filter(
+            (comment) => comment.comment_id !== optimisticComment.comment_id
+          )
+        );
+
         throw err;
       });
   };
@@ -136,6 +140,10 @@ function ArticlePage() {
           <p>{article.body}</p>
         </div>
       </article>
+      <CommentForm
+        articleId={article_id}
+        onCommentPosted={handleCommentPosted}
+      />
 
       <CommentsList comments={comments} />
     </main>
